@@ -8,6 +8,7 @@
     "@wdio/spec-reporter": "^9.29.1"
   },
   "scripts": {
-    "wdio": "wdio run ./wdio.conf.js"
+    "wdio": "wdio run ./wdio.conf.js",
+    "test": "node --test test/documentationSync.test.js"
   }
 }
