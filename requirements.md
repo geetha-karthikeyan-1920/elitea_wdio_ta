@@ -1,7 +1,8 @@
 # Requirements: Automated Documentation Sync
 **Jira Reference:** EPMCDMETST-59827
 **Source:** https://jiraeu.epam.com/browse/EPMCDMETST-59827
-0-## Jira-style User Story
+
+## Jira-style User Story
 **Title:** Automate documentation synchronization for Markdown files
 
 **User Story:**

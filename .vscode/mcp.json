@@ -1,0 +1,37 @@
+{
+  "servers": {
+    "jira": {
+      "type": "stdio",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/MCP/start-jira-mcp.ps1"
+      ],
+      "env": {
+        "JIRA_URL": "${env:JIRA_URL}",
+        "JIRA_EMAIL": "${env:JIRA_EMAIL}",
+        "JIRA_API_TOKEN": "${env:JIRA_API_TOKEN}",
+        "JIRA_PROJECT": "${env:JIRA_PROJECT}"
+      }
+    },
+    "github": {
+      "type": "stdio",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/MCP/start-github-mcp.ps1"
+      ],
+      "env": {
+        "GITHUB_TOKEN": "${env:GITHUB_TOKEN}",
+        "GITHUB_OWNER": "${env:GITHUB_OWNER}",
+        "GITHUB_REPO": "${env:GITHUB_REPO}"
+      }
+    }
+  }
+}

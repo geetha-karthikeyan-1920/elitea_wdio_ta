@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, writeFile, readFile, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { readFile as readPackageJson } from 'node:fs/promises';
 import { syncDocumentation } from '../src/documentationSync.js';
 
 test('syncDocumentation copies markdown files and writes a manifest', async () => {
@@ -86,4 +87,14 @@ test('syncDocumentation throws a clear error when the source directory is missin
   } finally {
     await rm(tempRoot, { recursive: true, force: true });
   }
+});
+
+test('package scripts expose the documented SDLC workflow commands', async () => {
+  const packageJsonPath = path.join(process.cwd(), 'package.json');
+  const packageJsonText = await readPackageJson(packageJsonPath, 'utf8');
+  const packageJson = JSON.parse(packageJsonText);
+
+  assert.equal(packageJson.scripts['agentic:jira'], 'node ./scripts/run-agentic-sdlc.js jira-mcp');
+  assert.equal(packageJson.scripts['agentic:sdlc'], 'node ./scripts/run-agentic-sdlc.js');
+  assert.equal(packageJson.scripts['bootstrap:story'], 'node ./scripts/bootstrap-story.js');
 });
