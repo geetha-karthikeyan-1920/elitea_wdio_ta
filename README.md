@@ -1,56 +1,64 @@
-# Template Meta
+# Agentic SDLC Capstone
 
-- TemplateName: **elitea_wdio_ta** *[Source: package.json]*
-- ApplicationProfileHeader: **elitea_wdio_ta WebdriverIO Test Automation** *[Inferred]*
+This repository implements a GitHub Copilot-driven agentic SDLC flow for the Automated Documentation Sync use case.
 
-# Executive Summary
+## Jira and MCP Connectivity
+The workflow expects Jira access through an MCP server. If the MCP server is not configured in this environment, the agent must ask for a Jira MCP connection or a PAT/OAuth token at the MCP layer before reading the story.
 
-- ApplicationName: **elitea_wdio_ta** *[Source: package.json]*
-- ServiceOwner: **QA Automation Team** *[Inferred from test automation focus]*
-- Maintainers: **Elitea WebdriverIO Automation Engineers** *[Inferred from project scope]*
-- BusinessImpact: **Ensures reliable regression validation for elitea application delivery** *[Inferred]*
-- Description: **WebdriverIO test automation project for the elitea_wdio_ta repository** *[Inferred]*
+## Agentic Workflow Structure
+The SDLC is driven through:
+- .github/copilot-instructions.md
+- .github/instructions/agentic-sdlc.instructions.md
+- .github/skills/*.md
+- scripts/run-agentic-sdlc.js
 
-# System Architecture and Tech Stack
+## Jira MCP
+Jira access is expected to come through an MCP server, not by hardcoding secrets into repo files.
 
-- LanguageRuntime: **Node.js / JavaScript module project** *[Source: package.json, wdio.conf.js]*
-- Exact runtime version: **Node.js 18+ (inferred from npm lockfile and dependency engines)** *[Inferred]*
-- Frameworks:
-  - **WebdriverIO** *[Source: package.json]*
-  - **Mocha** *[Source: package.json, wdio.conf.js]*
-- PrimaryDatabase: **None detected (test automation project)**
-- CloudProvider: **None detected (local execution)**
-- Infrastructure:
-  - **Local WebdriverIO runner** *[Source: wdio.conf.js]*
-  - **Chrome browser capability** *[Source: wdio.conf.js]*
-- EndpointEntryPoints:
-  - **wdio.conf.js** *[Source: package.json, wdio.conf.js]*
-  - **./test/specs/**/*.js** *[Source: wdio.conf.js]*
+Configuration options:
+- npm run agentic:jira
+- npm run agentic:sdlc -- jira-mcp --jira-id EPMCDMETST-59827
+- JIRA_ID=EPMCDMETST-59827 npm run agentic:sdlc -- jira-mcp
 
-# Integration and Dependencies
+If the MCP Jira server is not connected, the workflow must stop and ask for:
+- the Jira MCP server connection details, or
+- a PAT/OAuth token at the MCP layer
 
-- UpstreamDependencies: **Node.js runtime, Chrome browser, @wdio/cli, @wdio/local-runner, @wdio/mocha-framework, @wdio/spec-reporter** *[Source: package.json]*
-- DownstreamConsumers: **None detected in repository**
-- ExternalAPIs: **None detected**
-- EnvironmentConfigSummary: **Local WebdriverIO configuration, no external environment variables referenced in repository files**
-- CriticalEnvVariables: **None detected in repository**
-- SystemDependencies:
-  - **Chrome browser** *[Source: wdio.conf.js]*
-  - **Node.js runtime** *[Source: package.json]*
+Do not store Jira tokens in repository files or logs.
 
-# Technical Configuration
+## Bootstrap a New Story
+Create a fresh story folder and seed the standard SDLC files with:
+- npm run bootstrap:story
+- npm run bootstrap:story -- --jira-id EPMCDMETST-59827
+- JIRA_ID=EPMCDMETST-59827 npm run bootstrap:story
 
-- MainBranch: **main** *[Source: repository branches]*
-- BuildTool: **NPM / npm scripts** *[Source: package.json]*
-- CriticalEnvVariables: **None detected in repository**
-- DeploymentPipeline: **Not configured in repository**
-- BuildAndReleaseNotes: **Not available in repository**
+This creates files in a stories/<jira-id> folder with the usual:
+- requirements.md
+- architecture.md
+- design-review.md
+- impl-plan.md
+- PR_DESCRIPTION.md
 
-# Quality and Compliance
+## Trigger Commands
+Run the workflow step-by-step using:
+- npm run agentic:jira
+- npm run agentic:sdlc -- requirements
+- npm run agentic:sdlc -- architecture
+- npm run agentic:sdlc -- review
+- npm run agentic:sdlc -- plan
+- npm run agentic:sdlc -- implement
+- npm run agentic:sdlc -- verify
+- npm run agentic:sdlc -- pr
 
-- TestFrameworks:
-  - **Mocha** *[Source: package.json, wdio.conf.js]*
-- CodeCoverageGoal: **Not available in repository**
-- SecurityScanning: **Not available in repository**
-- ObservationLogging: **Not available in repository**
-- ComplianceNotes: **Not available in repository**
+## Capstone Scope
+The project captures the full lifecycle:
+- user story and requirements
+- architecture and design review
+- implementation planning
+- implementation and code review
+- verification
+- pull request preparation
+
+## Validation
+The feature is verified with:
+- npm test
