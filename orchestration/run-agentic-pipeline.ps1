@@ -137,6 +137,11 @@ function New-AutoPR {
     # prefer env vars, but fall back to parsing the git remote origin
     $owner = $env:GITHUB_OWNER
     $repo = $env:GITHUB_REPO
+    # if owner looks like an email, ignore it and parse remote
+    if ($owner -and $owner -match '@') {
+        Write-Host "GITHUB_OWNER appears to be an email; ignoring env value and attempting to parse git remote."
+        $owner = $null; $repo = $null
+    }
     if (-not $owner -or -not $repo) {
         try {
             $remoteUrl = (& git config --get remote.origin.url) 2>$null
