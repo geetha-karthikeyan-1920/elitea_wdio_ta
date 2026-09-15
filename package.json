@@ -9,6 +9,10 @@
   },
   "scripts": {
     "wdio": "wdio run ./wdio.conf.js",
-    "test": "node --test test/documentationSync.test.js"
+    "test": "node --test test/documentationSync.test.js",
+    "agentic:jira": "node ./scripts/run-agentic-sdlc.js jira-mcp",
+    "agentic:sdlc": "node ./scripts/run-agentic-sdlc.js",
+    "bootstrap:story": "node ./scripts/bootstrap-story.js",
+    "orchestration:run": "powershell -NoProfile -ExecutionPolicy Bypass -File ./orchestration/run-agentic-pipeline.ps1"
   }
 }
