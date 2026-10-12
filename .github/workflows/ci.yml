@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js (LTS20)
+      - name: Setup Node.js (LTS 20)
         uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -25,19 +25,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
+      - name: Run node tests
         run: npm test
 
-      - name: Upload test artifacts
+      - name: Run WDIO smoke
+        run: npm run wdio
+
+      - name: Upload WDIO reports and logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-artifacts
           path: |
-            npm-debug.log
-            *.log
-            test
             reports
             outputs
-            **/surefire
-            **/surefire-reports 
