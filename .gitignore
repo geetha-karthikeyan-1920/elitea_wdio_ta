@@ -3,13 +3,23 @@ node_modules/
 npm-debug.log
 yarn-debug.log
 yarn-error.log
-pnpm-debug.log
+pnmp-debug.log
 
 # Playwright
 playwright-report/
 test-results/
+playwright/.auth/
 
-# Project specific sdnc folders
-.github/
-stories/
-scripts/
+# Traces videos and screenshots (under test-results/ by default)
+*.trace
+*.video
+*.png
+*.jpg
+*.jpeg
+*.webp
+
+# OS & editor
+DS_Store
+Thumbs.db
+.idea/
+.vscode/
