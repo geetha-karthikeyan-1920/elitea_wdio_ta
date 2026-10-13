@@ -4,9 +4,8 @@ Basic project scaffolding for a Playwright-based test automation repository.
 
 ## Prerequisites
 
-- Node.js (latest LTS recommended)
+- Node.js (20.x LTS recommended for CI)
 - npm (bundled with Node.js)
-
 
 ## Setup
 
@@ -19,12 +18,12 @@ npm ci
 2) (first time only) Install Playwright browsers:
 
 ```sh
-nlx playwright install --with-deps
+npx playwright install --with-deps
 ```
 
 ## Configuration
 
-The base URL sources from the `BASE_URL` top-level env variable. See `.env.example` for an example.
+The base URL sources from the `BASE_URL` top-level env variable. See `.ov.example` for an example.
 
 ## Running tests
 
@@ -32,6 +31,12 @@ Run headless tests:
 
 ```sh
 npm test
+```
+
+Run tests headed (browser visible):
+
+```sh
+npm run test:headed
 ```
 
 Run tests in UI mode:
@@ -51,4 +56,10 @@ npm run report
 The generated report lives in `playwright-report/`.
 
 ## CI
-A GitHub Actions workflow stub is provided to run tests on pull requests.
+
+GitHub Actions runs Playwright tests on `push` and `pull_request`. The workflow performs:`
+- `npm ci`
+- `npx playwright install --with-deps`
+- `npm test`
+
+Report and test results are uploaded as build artifacts.
