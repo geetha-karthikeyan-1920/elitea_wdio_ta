@@ -1,14 +1,14 @@
 ﻿{
-  "jiraLink": "https://jiraeu.epam.com/browse/EPMCDMETST-47868",
-  "startedAt": "2026-10-13T15:33:00.000Z",
+  "jiraLink": "https://jiraeu.epam.com/browse/EPMCDMETST-5679",
+  "startedAt": "2026-10-13T15:49:06.000Z",
   "stages": [
-    { "name": "Requirement Analysis Agent", "status": "completed", "output": "outputs/EPMCDMETST-47868/requirements.md" },
-    { "name": "Architecture Agent", "status": "completed", "output": "outputs/EPMCDMETST-47868/architecture.md" },
-    { "name": "Design Review Agent", "status": "completed", "output": "outputs/EPMCDMETST-47868/design-review.md" },
-    { "name": "Implementation Planning Agent", "status": "completed", "output": "outputs/EPMCDMETST-47868/impl-plan.md" },
-    { "name": "Implementation Agent", "status": "completed", "output": "src/staysSearch.js" },
-    { "name": "Code Review Agent", "status": "completed", "output": "outputs/EPMCDMETST-47868/code-review.md" },
-    { "name": "Verification Agent", "status": "completed", "output": "outputs/EPMCDMETST-47868/verification.md" },
-    { "name": "PR Agent", "status": "completed", "output": "outputs/EPMCDMETST-47868/PR_DESCRIPTION.md" }
+    { "name": "Requirement Analysis Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/requirements.md" },
+    { "name": "Architecture Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/architecture.md" },
+    { "name": "Design Review Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/design-review.md" },
+    { "name": "Implementation Planning Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/impl-plan.md" },
+    { "name": "Implementation Agent", "status": "completed", "output": "src/addressBook.js" },
+    { "name": "Code Review Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/code-review.md" },
+    { "name": "Verification Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/verification.md" },
+    { "name": "PR Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/PR_DESCRIPTION.md" }
   ]
 }

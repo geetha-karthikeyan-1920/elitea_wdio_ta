@@ -31,18 +31,36 @@ Write-Host "AttachmentPath: $AttachmentPath"
 Write-Host "Resume: $Resume"
 Write-Host "StartFromStage: $StartFromStage"
 
+function Add-PipelineLine {
+    param(
+        $Target,
+        $Value
+    )
+
+    if ($null -eq $Value) {
+        $Target.Add('')
+        return
+    }
+
+    if ($Value -is [System.Collections.IEnumerable] -and $Value -isnot [string]) {
+        foreach ($item in $Value) {
+            Add-PipelineLine -Target $Target -Value $item
+        }
+        return
+    }
+
+    $Target.Add([string]$Value)
+}
+
 function Write-PipelineFile {
     param(
         [string]$Path,
         [object[]]$Lines
     )
 
-    $flat = foreach ($line in $Lines) {
-        if ($null -eq $line) {
-            ''
-        } else {
-            [string]$line
-        }
+    $flat = New-Object System.Collections.Generic.List[string]
+    foreach ($line in $Lines) {
+        Add-PipelineLine -Target $flat -Value $line
     }
 
     $text = ($flat -join "`r`n") + "`r`n"
@@ -139,16 +157,65 @@ function New-AutoPR {
     $timestamp = (Get-Date).ToString('yyyyMMddHHmmss')
     $branch = "$BranchPrefix/$JiraId-$timestamp"
 
+    $startingCommit = ''
+    try {
+        $startingCommit = (& git rev-parse HEAD).Trim()
+    } catch {
+        $startingCommit = ''
+    }
+
     Write-Host "Creating branch $branch and committing artifacts for $JiraId"
+    $committed = $false
     try {
         & git checkout -b $branch
-        & git add -A "outputs/$JiraId" "orchestration" 2>$null
         if ($LASTEXITCODE -ne 0) {
-            & git add -A "outputs/$JiraId" 2>$null
+            throw "git checkout failed with exit code $LASTEXITCODE"
         }
-        & git commit -m "Agentic SDLC: add orchestration artifacts for $JiraId" 2>$null
+
+        $paths = @()
+        $outputDir = Join-Path 'outputs' $JiraId
+        if (Test-Path -LiteralPath $outputDir) {
+            $paths += $outputDir
+        } else {
+            Write-Host "No outputs/$JiraId directory yet; skipping that path."
+        }
+        if (Test-Path -LiteralPath 'orchestration') {
+            $paths += 'orchestration'
+        }
+
+        if ($paths.Count -eq 0) {
+            Write-Host "No artifact paths to commit for $JiraId."
+        } else {
+            & git add -- @paths
+            if ($LASTEXITCODE -ne 0) {
+                throw "git add failed with exit code $LASTEXITCODE"
+            }
+
+            $staged = @(& git diff --cached --name-only)
+            if ($staged.Count -eq 0) {
+                Write-Host "No staged changes to commit for $JiraId."
+            } else {
+                & git commit -m "Agentic SDLC: add orchestration artifacts for $JiraId"
+                if ($LASTEXITCODE -ne 0) {
+                    throw "git commit failed with exit code $LASTEXITCODE"
+                }
+                $committed = $true
+            }
+        }
     } catch {
         Write-Host "Git commit skipped or failed: $($_.Exception.Message)"
+    }
+
+    $headCommit = ''
+    try {
+        $headCommit = (& git rev-parse HEAD).Trim()
+    } catch {
+        $headCommit = ''
+    }
+
+    if (-not $committed -or ($startingCommit -and $headCommit -eq $startingCommit)) {
+        Write-Host "No new commit for $JiraId; skipping push and pull request."
+        return
     }
 
     try {

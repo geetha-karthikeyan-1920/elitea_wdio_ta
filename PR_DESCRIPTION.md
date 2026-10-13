@@ -1,45 +1,41 @@
 ## Summary
-This change adds a stays search session model for EPMCDMETST-47868 so advanced filters and ISO currency viewing can be verified in this repository. The Jira story describes a stays results page, and this repo has no stays UI, so the behavior lives in a Node.js module with unit tests. Unspecified filters and the missing currency attachment are recorded as assumptions instead of being treated as confirmed product rules.
+This change completes the agentic SDLC for EPMCDMETST-5679, selecting a saved US shipping address from the address book. The pipeline commit had been skipped because `outputs/EPMCDMETST-5679` did not exist, and the stage list was written as a single line. The story is implemented as a checkout session model because this repository has no checkout screen.
 
 ## Changes Made
-- Added `requirements.md`, `architecture.md`, `design-review.md`, and `impl-plan.md` for the stays story and its agreed assumptions.
-- Added `src/staysSearch.js` to open, apply, and clear advanced filters, select a story currency, format prices, and keep that currency across details navigation.
-- Added `test/staysSearch.test.js` for the happy paths and the missing-field / not-found cases.
-- Updated the `test` script in `package.json` so `npm test` runs the stays tests together with the existing documentation-sync tests.
-- Added `.cursor/hooks/block-secret-commands.js` so shell commands that reference Jira or GitHub token variables are denied.
-- Corrected orchestration file writing in `orchestration/run-agentic-pipeline.ps1` so pipeline summaries are written as plain lines.
-- Added the story evidence under `outputs/EPMCDMETST-47868/`.
+- Fixed `orchestration/run-agentic-pipeline.ps1` so each stage is written on its own line, missing output folders are skipped instead of failing `git add`, and push plus pull-request creation are skipped when there is no new commit.
+- Added `requirements.md`, `architecture.md`, `design-review.md`, and `impl-plan.md` for the address-book story and its assumptions.
+- Added `src/addressBook.js` to list the signed-in user's saved US addresses, fill the shipping form, and advance checkout to payment.
+- Added `test/addressBook.test.js` for both acceptance scenarios, the empty book, and the not-found / missing-field cases.
+- Updated the `test` script in `package.json` so `npm test` includes the address-book tests.
+- Added the story evidence under `outputs/EPMCDMETST-5679/`.
 
 ## Test Evidence
 Command: `npm test -- --test-reporter=spec`
 
 ```
-✔ syncDocumentation copies markdown files and writes a manifest
-✔ syncDocumentation updates nested markdown files while preserving relative paths
-✔ syncDocumentation throws a clear error when the source directory is missing
-✔ package scripts expose the documented SDLC workflow commands
-✔ advanced filters are additional controls and applying them updates results
-✔ clearing advanced filters restores the unfiltered result list
-✔ currency selection displays story currency codes and persists across details navigation
-✔ missing stays, unknown filters, unknown currencies, and missing rates fail clearly
-✔ applying filters before the panel is open is rejected
-✔ stays search output does not read or echo credentials
-ℹ tests 10
-ℹ pass 10
+✔ opening the address book shows only the signed-in user US addresses
+✔ selecting a saved address fills the shipping form and advances checkout
+✔ an empty address book opens without advancing checkout
+✔ missing user, missing book, unknown address, and incomplete address fail clearly
+✔ address book lookup stays within the one second budget and does not read credentials
+ℹ tests 15
+ℹ pass 15
 ℹ fail 0
 ```
 
+The same run also passed the existing documentation-sync and stays-search tests. The full count is 15 passed and 0 failed.
+
 ## Known Limitations
-- The advanced filter names are illustrative. Jira does not define the real panel controls.
-- The currency attachment was not on the ticket, so only USD (840), EUR (978), GBP (826), AED (784), and JPY (392) are supported.
-- Conversion uses a caller-supplied rate table. A missing rate is reported as not found. There is no live exchange-rate source.
-- Currency persistence is in-memory session state for results and details. It is not a user profile.
-- No stays browser UI or WebdriverIO page is included, because that application is not in this repository.
-- `npm audit` reports 23 pre-existing findings in the WebdriverIO dependency tree. This change does not add or upgrade those packages.
+- Address fields are an assumption. Jira does not define the schema.
+- The next checkout step is recorded as `payment` because the story does not name it.
+- The one-second budget is checked for an in-memory lookup. There is no rendered modal and no live address service.
+- User profile storage and address storage are inputs, not implementations.
+- No checkout browser UI is included, because that application is not in this repository.
+- This branch also contains the earlier EPMCDMETST-47868 stays commit, because the pipeline created the branch from that HEAD.
 
 ## Reviewer Checklist
-- [ ] The stays behavior matches `requirements.md`, including the documented assumptions.
-- [ ] Tests cover apply, clear, currency display, persistence, and the not-found / missing-field cases.
+- [ ] Address-book behavior matches `requirements.md`, including the documented assumptions.
+- [ ] Tests cover opening the US list, selecting an address, the empty book, and the not-found / missing-field cases.
 - [ ] No secrets or tokens appear in source, tests, or the pull request text.
-- [ ] The illustrative filter catalog and the five-currency limit are acceptable until product confirms the gaps.
-- [ ] Pre-existing WebdriverIO audit findings are understood to be outside this story.
+- [ ] The pipeline no longer fails the commit when the story output folder is missing.
+- [ ] The assumed address fields and the `payment` next step are acceptable until product confirms them.
