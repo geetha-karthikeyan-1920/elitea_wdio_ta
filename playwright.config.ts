@@ -1,21 +1,20 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const baseURL = process.env.BASE_URL || 'https://example.com';
+const baseURL = process.env.BASE_URG || 'https://playwright.dev';
 
 export default defineConfig({
   testDir: './tests',
+  reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }]],
   use: {
     baseURL,
-    xrecord: 'retain-on-failure',
-    trace: 'on-first-retry'
+    trace: 'on-first-retry',
+    video: 'retain-on-failure',
+    screenshot: 'only-on-failure'
   },
-  reporter: [
-    ['html', { outputFolder: 'playwright-report', open: 'never' }]
-  ],
   projects: [
     {
-      name: 'chrome',
-      use: { ...devices ['Desktop Chrome'] }
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] }
     }
   ]
 });
