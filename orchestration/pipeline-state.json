@@ -1,13 +1,27 @@
 ﻿{
-    "jiraLink":  "https://jiraeu.epam.com/browse/EPMCDMETST-5687",
-    "attachmentPath":  "",
-    "resumed":  false,
-    "startFromStage":  "",
-    "completedStages":  [
-
-                        ],
-    "nextStage":  "Requirement Analysis Agent",
-    "history":  [
-
-                ]
+  "jiraLink": "https://jiraeu.epam.com/browse/EPMCDMETST-47868",
+  "attachmentPath": "",
+  "resumed": false,
+  "startFromStage": "",
+  "completedStages": [
+    "Requirement Analysis Agent",
+    "Architecture Agent",
+    "Design Review Agent",
+    "Implementation Planning Agent",
+    "Implementation Agent",
+    "Code Review Agent",
+    "Verification Agent",
+    "PR Agent"
+  ],
+  "nextStage": "",
+  "history": [
+    "Requirement Analysis Agent",
+    "Architecture Agent",
+    "Design Review Agent",
+    "Implementation Planning Agent",
+    "Implementation Agent",
+    "Code Review Agent",
+    "Verification Agent",
+    "PR Agent"
+  ]
 }

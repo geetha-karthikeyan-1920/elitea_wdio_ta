@@ -1,24 +1,28 @@
-# Design Review
+# Design Review: EPMCDMETST-47868
 
 ## Review Summary
-The proposed architecture is appropriate for the requested scope because it stays simple, keeps the implementation testable, and avoids unnecessary dependencies. The review focused on correctness, maintainability, and operational clarity.
+The session model is a suitable design for this repository. The Jira story describes a stays results page, and this repo has no stays UI to attach that page to. Keeping the behavior in a pure function module lets the acceptance criteria be verified without inventing a front end.
 
-## Risks and Gaps Identified
-- Existing files in the target directory could cause ambiguity if the sync behavior is not explicit.
-- The initial design should clearly distinguish between copied, skipped, and updated files to avoid confusion during automation.
-- The manifest format should be simple enough for both humans and downstream tools to consume.
+## Risks and Gaps
+- The story does not name the advanced filters. A hard-coded product catalog could be wrong once the real panel exists.
+- The currency attachment is missing, so any catalog larger than the five named codes would be invented.
+- Conversion rules are unspecified. Embedding market rates in the module would become stale and could be mistaken for a pricing service.
+- Session persistence covers results and details only. It does not survive a new browser session or a profile setting, which the story does not require.
+- Pre-existing WebdriverIO dependencies have `npm audit` findings. This story does not add a dependency, and those findings are outside the stays change.
 
 ## Review Findings
-- The layered architecture is sufficient for the current requirements and does not introduce unnecessary complexity.
-- The design should explicitly define how pre-existing target files are handled.
-- The implementation should report counts for copied, skipped, and updated files in a consistent way.
+- Filter ids must be validated. An unknown id or a blank value should fail before the result list changes.
+- Advanced controls must be disjoint from basic controls, otherwise the "beyond basic filters" criterion cannot be demonstrated.
+- Price formatting must fail when the stay has no price or the rate table has no entry, instead of rendering a blank or a secret-bearing message.
+- Currency selection must live on the session object that both results and details read.
 
 ## Agreed Design Decisions
-- Use Node.js built-in modules rather than introducing external packages.
-- Keep the interface simple by accepting source and target directories as a single options object.
-- Write the manifest into the target directory for easy inspection after each run.
-- Treat unchanged files as skipped and modified files as updated to make the sync behavior observable.
-- Keep the output deterministic for a given input so the sync process is predictable in automation pipelines.
+- Use an illustrative, replaceable filter catalog and document it as an assumption.
+- Support only USD (840), EUR (978), GBP (826), AED (784), and JPY (392).
+- Require the caller to pass rates. Do not call an external exchange-rate API.
+- Format prices as `CODE (numeric) amount`.
+- Return a new session from each action so tests can compare before and after without hidden mutation.
+- Leave the documentation-sync utility and the WebdriverIO sample spec unchanged.
 
 ## Architecture Updates
-The architecture document was updated to reflect the agreed behavior for file handling and manifest reporting.
+`architecture.md` records the session model, the catalog split, and the decision not to build a browser page in this repository.

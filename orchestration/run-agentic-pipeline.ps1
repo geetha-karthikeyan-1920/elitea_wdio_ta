@@ -31,6 +31,25 @@ Write-Host "AttachmentPath: $AttachmentPath"
 Write-Host "Resume: $Resume"
 Write-Host "StartFromStage: $StartFromStage"
 
+function Write-PipelineFile {
+    param(
+        [string]$Path,
+        [object[]]$Lines
+    )
+
+    $flat = foreach ($line in $Lines) {
+        if ($null -eq $line) {
+            ''
+        } else {
+            [string]$line
+        }
+    }
+
+    $text = ($flat -join "`r`n") + "`r`n"
+    $utf8 = New-Object System.Text.UTF8Encoding $false
+    [System.IO.File]::WriteAllText($Path, $text, $utf8)
+}
+
 $state = [ordered]@{
     jiraLink = $JiraLink
     attachmentPath = $AttachmentPath
@@ -40,30 +59,38 @@ $state = [ordered]@{
     nextStage = if ($StartFromStage) { $StartFromStage } else { $pipeline[0] }
     history = @()
 }
-$state | ConvertTo-Json -Depth 10 | Set-Content -Path $stateFile -Encoding utf8
+Write-PipelineFile -Path $stateFile -Lines @(($state | ConvertTo-Json -Depth 10))
 
 $run = [ordered]@{
     jiraLink = $JiraLink
     startedAt = (Get-Date).ToString('o')
     stages = @()
 }
-$run | ConvertTo-Json -Depth 10 | Set-Content -Path $runFile -Encoding utf8
+Write-PipelineFile -Path $runFile -Lines @(($run | ConvertTo-Json -Depth 10))
 
-@(
+$stageLines = @()
+foreach ($stage in $pipeline) {
+    $stageLines += "- $stage"
+}
+$stageItems = @()
+foreach ($stage in $pipeline) {
+    $stageItems += "    <li>$stage</li>"
+}
+
+Write-PipelineFile -Path $summaryFile -Lines @(
     '# Agentic SDLC Pipeline Summary',
     '',
-    '- Jira Link: ' + $JiraLink,
-    '- Attachment: ' + $AttachmentPath,
-    '- Start Stage: ' + $StartFromStage,
-    '- Resume: ' + $Resume,
+    "- Jira Link: $JiraLink",
+    "- Attachment: $AttachmentPath",
+    "- Start Stage: $StartFromStage",
+    "- Resume: $Resume",
     '',
     '## Stage Sequence',
-    ($pipeline | ForEach-Object { '- ' + $_ }) -join [Environment]::NewLine,
-    '',
-    'This is a scaffolded orchestration runtime placeholder.'
-) | Set-Content -Path $summaryFile -Encoding utf8
+    $stageLines,
+    ''
+)
 
-@(
+Write-PipelineFile -Path $demoFile -Lines @(
     '<!DOCTYPE html>',
     '<html lang="en">',
     '<head>',
@@ -72,13 +99,13 @@ $run | ConvertTo-Json -Depth 10 | Set-Content -Path $runFile -Encoding utf8
     '</head>',
     '<body>',
     '  <h1>Agentic SDLC Pipeline Summary</h1>',
-    '  <p>Jira Link: ' + $JiraLink + '</p>',
+    "  <p>Jira Link: $JiraLink</p>",
     '  <ul>',
-    ($pipeline | ForEach-Object { '    <li>' + $_ + '</li>' }) -join [Environment]::NewLine,
+    $stageItems,
     '  </ul>',
     '</body>',
     '</html>'
-) | Set-Content -Path $demoFile -Encoding utf8
+)
 
 Write-Host 'Pipeline files created successfully.'
 Write-Host "State file: $stateFile"

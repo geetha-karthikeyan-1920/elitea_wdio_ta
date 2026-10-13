@@ -1,45 +1,32 @@
-# Architecture: Automated Documentation Sync
+# Architecture: Stays advanced filters and currency viewing
+
+**Jira Reference:** EPMCDMETST-47868
 
 ## Overview
-The solution is a small Node.js utility that reads Markdown files from a source tree and writes them to a target tree. It is intentionally dependency-light so it can be tested locally and used in CI without additional services.
+The story is implemented as a Node.js session model in `src/staysSearch.js`. A caller supplies the current stay list, an optional filter catalog, and a conversion rate table. The module returns a new session for each action so results, active filters, and the selected currency stay explicit and testable.
 
-## Recommended Architecture
-The design follows a simple layered approach:
+This repository is a WebdriverIO test-automation project. It does not host the stays search user interface, so the architecture stops at the session model the UI would call.
 
-1. Input Layer
-   - Accepts a source directory and a target directory from the caller.
-   - Validates the source path before any file operations begin.
-
-2. Processing Layer
-   - Scans the source directory recursively for Markdown files.
-   - Preserves the relative folder structure when copying files.
-   - Compares existing target files to decide whether to copy, skip, or update them.
-
-3. Output Layer
-   - Writes copied or updated files into the target directory.
-   - Produces a JSON manifest describing copy, skip, and update counts.
-
-## Key Components and Responsibilities
-- Source Scanner: discovers Markdown files recursively from the source directory.
-- File Syncer: copies content from the source into the target while preserving structure.
-- Content Comparator: checks whether the target file already exists and whether it needs updating.
-- Manifest Writer: generates a JSON report in the target directory for traceability.
-- Validation Layer: ensures the source path exists and is a directory before execution.
+## Components and Responsibilities
+- **Search session:** holds stays, the filter catalog, rates, the open/closed panel flag, active advanced filters, the selected currency, and whether the traveler is on results or details.
+- **Filter catalog:** separates basic controls from advanced controls. Opening the panel rejects a catalog that has no advanced controls or that repeats a basic control id.
+- **Filter applicator:** checks each advanced selection against the catalog, drops stays that do not match, and returns the active selections for display.
+- **Currency catalog:** exposes the five story codes and numeric codes. Unknown codes are rejected.
+- **Price formatter:** converts a stay's base amount with the supplied rate table and formats `CODE (numeric) amount`.
+- **Navigation state:** opening details and returning to results keeps the selected currency on the same session.
 
 ## Data Flow
-1. A caller supplies the source and target directories.
-2. The validation layer confirms that the source directory exists and is readable.
-3. The scanner walks the source tree and identifies Markdown files.
-4. For each file, the syncer writes the content to the appropriate location in the target tree.
-5. The manifest writer records the result of each file operation and saves the report in the target directory.
+1. The caller creates a session with stays and rates.
+2. Opening Advanced filters marks the panel open and lists controls that are not basic filters.
+3. Apply validates the selection, stores it, and the result query returns only matching stays with prices in the selected currency.
+4. Clear removes the advanced selection and the next result query returns the full list.
+5. Choosing a currency updates the session. Result rows and the details view both read that currency.
+6. Returning from details keeps the currency and clears only the selected stay id.
 
 ## Technology Choices
-- Node.js runtime for portability and ease of integration.
-- Built-in fs/promises module for file-system operations.
-- Node.js built-in test runner for automated verification.
-- JSON manifest output for simple inspection and downstream automation.
+- Node.js built-in modules only. No new package was added for this story.
+- Node.js built-in test runner, consistent with `test/documentationSync.test.js`.
+- Plain objects for session state so the behavior can be asserted without a browser.
 
-## Architectural Notes
-- The design favors simplicity over extensibility to keep maintenance low.
-- The solution avoids external dependencies so it remains easy to run in a minimal environment.
-- The output is deterministic for the same input set, which supports repeatable automation.
+## Existing Repository Context
+`src/documentationSync.js` remains the earlier documentation-sync utility. It is not on the data path for stays search.
