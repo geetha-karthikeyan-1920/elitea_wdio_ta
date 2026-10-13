@@ -9,7 +9,5 @@ pnpm-debug.log
 playwright-report/
 test-results/
 
-# Project specific sdnc folders
-.github/
-stories/
-scripts/
+# Env
+.env
