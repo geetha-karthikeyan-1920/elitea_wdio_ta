@@ -4,18 +4,18 @@ const baseURL = process.env.BASE_URL || 'https://example.com';
 
 export default defineConfig({
   testDir: './tests',
+  reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }]],
+  retries: process.env.CI ? 2 : 0,
   use: {
     baseURL,
-    xrecord: 'retain-on-failure',
-    trace: 'on-first-retry'
+    trace: 'on-first-retry',
+    video: 'retain-on-failure',
+    screenshot: 'only-on-failure'
   },
-  reporter: [
-    ['html', { outputFolder: 'playwright-report', open: 'never' }]
-  ],
   projects: [
     {
       name: 'chrome',
-      use: { ...devices ['Desktop Chrome'] }
+      use: { ...devices['Desktop Chrome'] }
     }
   ]
 });
