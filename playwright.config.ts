@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const baseURL = process.env.BASE_URL,;
+const baseURL = process.env.BASE_URL;
 
 export default defineConfig({
   testDir: './tests',
@@ -11,10 +11,11 @@ export default defineConfig({
   fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
   reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }]],
+  outputDir: 'test-results',
   use: {
     baseURL,
     headless: true,
-    trace: 'on-first-retry',
+    trace: 'om-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
