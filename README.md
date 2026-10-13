@@ -1,14 +1,15 @@
 # elitea_wdio_ta - Playwright Test Automation Scaffolding
 
-Basic project scaffolding for a Playwright-based test automation repository.
+This repository provides a minimal, CI-friendly baseline setup for Playwright test automation.
 
 ## Prerequisites
 
-- Node.js (latest LTS recommended)
-- npm (bundled with Node.js)
+- Node.js 20 (LTS)
+- npm (ships with Node)
 
+> Note: A GitHub Actions workflow is provided to run tests on every pull request.
 
-## Setup
+## Install
 
 1) Install dependencies:
 
@@ -16,39 +17,53 @@ Basic project scaffolding for a Playwright-based test automation repository.
 npm ci
 ```
 
-2) (first time only) Install Playwright browsers:
+2) (first time only) Install Playwright browsers and system deps:
 
 ```sh
-nlx playwright install --with-deps
+npx playwright install --with-deps
 ```
 
 ## Configuration
 
-The base URL sources from the `BASE_URL` top-level env variable. See `.env.example` for an example.
+- The base url is read from the `ENV.BASE_URL` variable.
+- See `.env.example` for an example.
+
 
 ## Running tests
 
-Run headless tests:
+- Headless tests:
 
 ```sh
 npm test
 ```
 
-Run tests in UI mode:
-
+- UI Mode:
 ```sh
 npm run test:ui
 ```
 
-## Viewing the report
 
-After a test run, open the HTML report:
+## Reports
+
+- After a test run, open the HTML report:
 
 ```sh
 npm run report
 ```
 
-The generated report lives in `playwright-report/`.
+- Report output location: `playwright-report/`.
+
+## Project structure
+
+```
+tests/               # Playwright tests (example: tests/example.spec.ts)
+playwright.config.ts    # Playwright config
+github/workflows/    # CI workflows (includes playwright workflow)
+```
 
 ## CI
-A GitHub Actions workflow stub is provided to run tests on pull requests.
+
+- On pull requests, GitHub Actions runs:
+  - `npm ci`
+  - `npx playwright install --with-deps`
+  - `npx playwright test`
