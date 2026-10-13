@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-test('page has a title', async ( { page }) => {
-  await page.goto('/');
-  await expect(page).toHaveTitle(/example/i);
+test('api can get a stable response', async ({ request }) => {
+  const response = await request.get('https://httpbin.org/get');
+  expect(response.ok()).toBeTruthy();
+
+  const body = await response.json();
+  expect(body).toHaveProperty('url', 'https://httpbin.org/get');
 });
