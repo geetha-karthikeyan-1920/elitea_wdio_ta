@@ -1,14 +1,7 @@
-﻿{
-  "jiraLink": "https://jiraeu.epam.com/browse/EPMCDMETST-5679",
-  "startedAt": "2026-10-13T15:49:06.000Z",
-  "stages": [
-    { "name": "Requirement Analysis Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/requirements.md" },
-    { "name": "Architecture Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/architecture.md" },
-    { "name": "Design Review Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/design-review.md" },
-    { "name": "Implementation Planning Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/impl-plan.md" },
-    { "name": "Implementation Agent", "status": "completed", "output": "src/addressBook.js" },
-    { "name": "Code Review Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/code-review.md" },
-    { "name": "Verification Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/verification.md" },
-    { "name": "PR Agent", "status": "completed", "output": "outputs/EPMCDMETST-5679/PR_DESCRIPTION.md" }
-  ]
+{
+    "jiraLink":  "https://jiraeu.epam.com/browse/EPMCDMETST-47868",
+    "startedAt":  "2026-10-14T07:33:20.7478998+05:30",
+    "stages":  [
+
+               ]
 }
