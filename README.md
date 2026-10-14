@@ -13,7 +13,7 @@ The SDLC is driven through:
 - scripts/run-agentic-sdlc.js
 
 ## Jira MCP
-Jira access is expected to come through an MCP server, not by hardcoding secrets into repo files.
+Jira and GitHub MCP servers are configured for Cursor in `.cursor/mcp.json`. They start `MCP/start-jira-mcp.ps1` and `MCP/start-github-mcp.ps1`, and they inherit `JIRA_*` and `GITHUB_*` from the environment. Do not hardcode tokens in repository files.
 
 Configuration options:
 - npm run agentic:jira

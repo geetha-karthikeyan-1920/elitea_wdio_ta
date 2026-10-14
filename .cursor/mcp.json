@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "jira": {
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "MCP/start-jira-mcp.ps1"
+      ]
+    },
+    "github": {
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "MCP/start-github-mcp.ps1"
+      ]
+    }
+  }
+}
