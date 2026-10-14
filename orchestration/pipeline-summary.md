@@ -1,6 +1,6 @@
 # Agentic SDLC Pipeline Summary
 
-- Jira Link: https://jiraeu.epam.com/browse/EPMCDMETST-47868
+- Jira Link: https://jiraeu.epam.com/browse/EPMCDMETST-36104
 - Attachment: 
 - Start Stage: 
 - Resume: False
